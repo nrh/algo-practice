@@ -13,38 +13,31 @@ def countinversions(ary):
 def mergesortcount(ary):
     # base cases
     l = len(ary)
-    if l <= 1:
-        return (0, ary)
+    if l > 1:
+        mid = l//2
+        left = ary[:mid]
+        right = ary[mid:]
+        lcount, left = mergesortcount(ary[:mid])
+        rcount, right = mergesortcount(ary[mid:])
+        scount, merged = splitcount(left, right)
+        count = scount + lcount + rcount
+        return count, merged
+    else:
+        return 0, ary
 
-    # split
-    mid = int(l/2)
-    left = ary[0:mid]
-    right = ary[mid:]
-    (lcount, left) = mergesortcount(left)
-    (rcount, right) = mergesortcount(right)
-    (scount, merged) = countsplit(left, right)
-    count = scount + lcount + rcount
-
-    return count, merged
-
-
-def countsplit(left, right):
+def splitcount(left, right):
     # merge - count split inversions
     res = []
-    i = 0
-    j = 0
     scount = 0
-    while i < len(left) and j < len(right):
-        if int(left[i]) > int(right[j]):
-            res.append(right[j])
-            j += 1
-            scount = scount + len(left) - i
+    while left and right:
+        if int(left[0]) <= int(right[0]):
+            res.append(left.pop(0))
         else:
-            res.append(left[i])
-            i += 1
+            scount += len(left)
+            res.append(right.pop(0))
 
-    res += left[i:]
-    res += right[j:]
+    res += left
+    res += right
 
     return scount, res
 
@@ -52,6 +45,15 @@ def countsplit(left, right):
 class DoTest(unittest.TestCase):
     def test_base(self):
         self.assertEqual(countinversions([1, 3, 5, 2, 4, 6]), 3)
+
+    def test_bigfile(self):
+        try:
+            with open('test_201_countinv.txt') as f:
+                i, s = mergesortcount([int(x.strip()) for x in f])
+        except OSError:
+            pass
+
+        self.assertEqual(i, 2407905288)
 
 
 def create_dynamic_method(pair):
