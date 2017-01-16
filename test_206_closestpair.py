@@ -39,17 +39,17 @@ def closestpair(pointlist):
                     dist = td
                     closest = [plist[i].as_tuple(), plist[j].as_tuple()]
 
-    return closest
+    return sorted(closest)
 
 class DoTest(unittest.TestCase):
     def test_base(self):
-        self.assertEqual(closestpair([[1, 2], [3, 4], [5, 7]]),
-                         [[1, 2], [3, 4]])
+        x = closestpair([[1, 2], [3, 4], [5, 7]])
+        self.assertEqual(x, sorted([[1, 2], [3, 4]]))
 
 
 def create_dynamic_method(pair):
     def dynamic_test_method(self):
-        self.assertEqual(closestpair(pair['t']), pair['r'])
+        self.assertEqual(closestpair(pair['t']), sorted(pair['r']))
 
     return dynamic_test_method
 
