@@ -52,8 +52,8 @@ def mult(pair):
 
     return p1
 
-class MultTest(unittest.TestCase):
-    def test(self):
+class DoTest(unittest.TestCase):
+    def test_base(self):
         self.assertEqual(mult([6, 5]), 30)
 
 
@@ -69,11 +69,14 @@ tests = []
 tname = fn.rsplit('.')[0:-1]
 tname.append('yaml')
 tname = '.'.join(tname)
-with open(tname, 'r') as y:
-    tests = yaml.load(y)
+try:
+    with open(tname, 'r') as y:
+        tests = yaml.load(y)
+except OSError:
+    pass
 
 for seq, t in enumerate(tests):
     dynamic_method = create_dynamic_method(t)
     dynamic_method.__name__ = 'test_yaml_{0}'.format(seq)
-    setattr(MultTest, dynamic_method.__name__, dynamic_method)
+    setattr(DoTest, dynamic_method.__name__, dynamic_method)
     del dynamic_method
