@@ -44,21 +44,25 @@ def splitcount(left, right):
 
 class DoTest(unittest.TestCase):
     def test_base(self):
-        self.assertEqual(countinversions([1, 3, 5, 2, 4, 6]), 3)
+        i = countinversions([1, 3, 5, 2, 4, 6])
+        print('swaps={0}'.format(i))
+        self.assertEqual(i, 3)
 
     def test_bigfile(self):
         try:
             with open('test_201_countinv.txt') as f:
-                i, s = mergesortcount([int(x.strip()) for x in f])
+                i, _ = mergesortcount([int(x.strip()) for x in f])
         except OSError:
             pass
-
+        print('swaps={0}'.format(i))
         self.assertEqual(i, 2407905288)
 
 
 def create_dynamic_method(pair):
     def dynamic_test_method(self):
-        self.assertEqual(countinversions(pair['t']), pair['r'])
+        i = countinversions(pair['t'])
+        print('swaps={0}'.format(i))
+        self.assertEqual(i, pair['r'])
 
     return dynamic_test_method
 
